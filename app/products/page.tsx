@@ -281,7 +281,7 @@ export default function ProductsPage() {
                   <Checkbox
                     id="inStock"
                     checked={inStockOnly}
-                    onCheckedChange={setInStockOnly}
+                    onCheckedChange={(checked) => setInStockOnly(checked === true)}
                   />
                   <Label htmlFor="inStock" className="text-sm cursor-pointer">
                     In Stock Only

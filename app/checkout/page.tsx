@@ -207,7 +207,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="createAccount" checked={createAccount} onCheckedChange={setCreateAccount} />
+                    <Checkbox id="createAccount" checked={createAccount} onCheckedChange={(checked) => setCreateAccount(checked === true)} />
                     <Label htmlFor="createAccount">Create an account for faster checkout</Label>
                   </div>
 
@@ -275,10 +275,10 @@ export default function CheckoutPage() {
                   <div>
                     <Label className="text-base font-medium mb-4 block">Billing Address</Label>
                     <div className="flex items-center space-x-2 mb-4">
-                      <Checkbox 
-                        id="sameAsShipping" 
-                        checked={sameAsShipping} 
-                        onCheckedChange={setSameAsShipping} 
+                      <Checkbox
+                        id="sameAsShipping"
+                        checked={sameAsShipping}
+                        onCheckedChange={(checked) => setSameAsShipping(checked === true)}
                       />
                       <Label htmlFor="sameAsShipping">Same as shipping address</Label>
                     </div>
