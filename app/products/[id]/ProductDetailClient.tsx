@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toast } from 'sonner';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { useStore, toCartProduct } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -84,15 +88,15 @@ const reviews = [
 
 const relatedProducts = [
   {
-    id: '2',
+    id: '5',
     name: "Roasted Cashews",
     price: 26.99,
-    originalPrice: 32.99,
+    originalPrice: 31.99,
     image: "https://images.unsplash.com/photo-1520072959219-c595dc870360?w=400&h=400&fit=crop",
     rating: 4.8
   },
   {
-    id: '3', 
+    id: '4',
     name: "Mixed Nuts Deluxe",
     price: 28.99,
     originalPrice: 34.99,
@@ -100,19 +104,34 @@ const relatedProducts = [
     rating: 4.7
   },
   {
-    id: '4',
-    name: "Walnuts Premium", 
-    price: 22.99,
-    originalPrice: 27.99,
-    image: "https://images.unsplash.com/photo-1518217335476-b3c0b5b6fb36?w=400&h=400&fit=crop",
+    id: '6',
+    name: "Dried Cranberries",
+    price: 16.99,
+    originalPrice: 19.99,
+    image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=400&h=400&fit=crop",
     rating: 4.6
   }
 ];
 
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
+  const { addToCart, addToWishlist, removeFromWishlist, setCartOpen } = useStore();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  // This page's product ids are strings ('1'), the cart keys on numbers.
+  const cartProduct = toCartProduct({
+    id: Number(product.id),
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    originalPrice: product.originalPrice,
+    image: product.images[0],
+    category: product.category,
+    rating: product.rating,
+    reviews: product.reviews,
+    inStock: product.inStock,
+  });
 
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
@@ -122,28 +141,41 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   };
 
   const handleAddToCart = () => {
-    console.log(`Adding ${quantity} items to cart`);
-    // Add your cart logic here
+    addToCart(cartProduct, quantity);
+    toast.success(`${quantity} × ${product.name} added to cart`);
+    setCartOpen(true);
   };
 
   const handleWishlist = () => {
+    if (isWishlisted) {
+      removeFromWishlist(cartProduct.id);
+      toast(`${product.name} removed from wishlist`);
+    } else {
+      addToWishlist(cartProduct);
+      toast.success(`${product.name} saved to wishlist`);
+    }
     setIsWishlisted(!isWishlisted);
-    console.log(`${isWishlisted ? 'Removed from' : 'Added to'} wishlist`);
   };
 
-  const handleShare = () => {
-    if (typeof window !== 'undefined') {
-      if (navigator.share) {
-        navigator.share({
+  const handleShare = async () => {
+    if (typeof window === 'undefined') return;
+
+    if (navigator.share) {
+      // A user-cancelled share rejects; swallowing it keeps the console clean.
+      try {
+        await navigator.share({
           title: product.name,
           text: product.description,
           url: window.location.href,
         });
-      } else {
-        navigator.clipboard.writeText(window.location.href);
-        alert('Link copied to clipboard!');
+      } catch {
+        /* dismissed by the user */
       }
+      return;
     }
+
+    await navigator.clipboard.writeText(window.location.href);
+    toast.success('Link copied to clipboard');
   };
 
   const discountPercentage = product.originalPrice > product.price 
@@ -152,33 +184,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Simple Header */}
-      <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-yellow-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">N</span>
-              </div>
-              <span className="text-xl font-bold text-gray-800">NutriVault</span>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" size="sm">
-                <Heart className="h-4 w-4 mr-1" />
-                Wishlist
-              </Button>
-              <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                <ShoppingCart className="h-4 w-4 mr-1" />
-                Cart
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-      
+      {/* Uses the site header/footer rather than a stripped-down copy — the copy
+          had a dead Cart button, no cart count and no mobile navigation. */}
+      <Header />
+
       <div className="container mx-auto px-4 py-8">
         {/* Back Button */}
-        <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-6">
+        <Link href="/products" className="inline-flex min-h-[44px] items-center text-gray-600 hover:text-gray-800 mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Products
         </Link>
@@ -235,16 +247,16 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           {/* Product Info */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
                 {product.name}
               </h1>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 text-base sm:text-lg">
                 {product.description}
               </p>
             </div>
 
             {/* Rating */}
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <div className="flex items-center">
                 <div className="flex mr-2">
                   {[...Array(5)].map((_, i) => (
@@ -268,7 +280,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             </div>
 
             {/* Price */}
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center gap-3">
               <span className="text-3xl font-bold text-gray-800">
                 ${product.price}
               </span>
@@ -303,7 +315,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             {/* Features */}
             <div>
               <h3 className="font-semibold text-gray-800 mb-3">Key Features</h3>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {product.features.map((feature, index) => (
                   <div key={index} className="flex items-center space-x-2">
                     <Leaf className="h-4 w-4 text-green-600" />
@@ -351,27 +363,28 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 </div>
               </div>
 
-              <div className="flex space-x-4">
-                <Button 
-                  size="lg" 
-                  className="flex-1 bg-gray-800 hover:bg-gray-900"
+              <div className="flex gap-3">
+                <Button
+                  size="lg"
+                  className="flex-1 min-w-0 bg-gray-800 hover:bg-gray-900"
                   disabled={!product.inStock}
                   onClick={handleAddToCart}
                 >
-                  <ShoppingCart className="h-5 w-5 mr-2" />
-                  Add to Cart - ${(product.price * quantity).toFixed(2)}
+                  <ShoppingCart className="h-5 w-5 mr-2 flex-shrink-0" />
+                  <span className="truncate">Add to Cart - ${(product.price * quantity).toFixed(2)}</span>
                 </Button>
-                
+
                 <Button
                   variant="outline"
                   size="lg"
+                  aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
                   onClick={handleWishlist}
-                  className={isWishlisted ? 'text-red-500 border-red-500' : ''}
+                  className={`flex-shrink-0 px-4 ${isWishlisted ? 'text-red-500 border-red-500' : ''}`}
                 >
                   <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
                 </Button>
-                
-                <Button variant="outline" size="lg" onClick={handleShare}>
+
+                <Button variant="outline" size="lg" aria-label="Share this product" className="flex-shrink-0 px-4" onClick={handleShare}>
                   <Share2 className="h-5 w-5" />
                 </Button>
               </div>
@@ -402,10 +415,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         <Card className="mb-16">
           <CardContent className="p-0">
             <Tabs defaultValue="description" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="description">Description</TabsTrigger>
-                <TabsTrigger value="nutrition">Nutrition Facts</TabsTrigger>
-                <TabsTrigger value="reviews">Reviews ({product.reviews})</TabsTrigger>
+              {/* text-xs below sm: the triggers are whitespace-nowrap, so at 320px
+                  three full-size labels pushed the card wider than the viewport. */}
+              <TabsList className="grid w-full grid-cols-3 h-auto">
+                <TabsTrigger value="description" className="text-xs sm:text-sm px-1 sm:px-3">Description</TabsTrigger>
+                <TabsTrigger value="nutrition" className="text-xs sm:text-sm px-1 sm:px-3">Nutrition</TabsTrigger>
+                <TabsTrigger value="reviews" className="text-xs sm:text-sm px-1 sm:px-3">Reviews ({product.reviews})</TabsTrigger>
               </TabsList>
               
               <TabsContent value="description" className="p-6">
@@ -473,9 +488,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               
               <TabsContent value="reviews" className="p-6">
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <h3 className="text-xl font-semibold text-gray-800">Customer Reviews</h3>
-                    <Button variant="outline">Write a Review</Button>
+                    <Button asChild variant="outline">
+                      <Link href="/contact">Write a Review</Link>
+                    </Button>
                   </div>
                   
                   <div className="space-y-4">
@@ -569,8 +586,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                           ${relatedProduct.originalPrice}
                         </span>
                       </div>
-                      <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                        Add to Cart
+                      <Button asChild size="sm" className="bg-green-600 hover:bg-green-700">
+                        <Link href={`/products/${relatedProduct.id}`}>View</Link>
                       </Button>
                     </div>
                   </div>
@@ -581,19 +598,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         </section>
       </div>
 
-      {/* Simple Footer */}
-      <footer className="bg-gray-800 text-white py-8 mt-16">
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-yellow-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">N</span>
-            </div>
-            <span className="text-xl font-bold">NutriVault</span>
-          </div>
-          <p className="text-gray-400 mb-4">Premium Dry Fruits & Nuts</p>
-          <p className="text-sm text-gray-500">© 2024 NutriVault. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

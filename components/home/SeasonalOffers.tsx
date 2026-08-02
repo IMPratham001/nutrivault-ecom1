@@ -1,9 +1,11 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { NewsletterForm } from '@/components/layout/NewsletterForm';
 import { Timer, Gift, Percent } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -72,7 +74,7 @@ function CountdownTimer({ endDate }: { endDate: Date }) {
 
 export function SeasonalOffers() {
   return (
-    <section className="py-16 bg-gradient-to-br from-yellow-50 to-orange-50">
+    <section className="py-12 md:py-16 bg-gradient-to-br from-yellow-50 to-orange-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -114,7 +116,7 @@ export function SeasonalOffers() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-8 flex flex-col justify-center">
+                  <div className="p-6 sm:p-8 flex flex-col justify-center">
                     <Badge className="w-fit mb-3 bg-yellow-100 text-yellow-800">
                       {offer.badge}
                     </Badge>
@@ -140,8 +142,8 @@ export function SeasonalOffers() {
                     </div>
 
                     {/* Pricing */}
-                    <div className="flex items-center space-x-3 mb-4">
-                      <span className="text-3xl font-bold text-earth">
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <span className="text-2xl sm:text-3xl font-bold text-earth">
                         ${offer.salePrice}
                       </span>
                       <span className="text-lg text-gray-500 line-through">
@@ -158,8 +160,8 @@ export function SeasonalOffers() {
                     </div>
 
                     {/* CTA Button */}
-                    <Button className="w-full btn-earth text-lg py-6">
-                      Shop This Deal
+                    <Button asChild className="w-full btn-earth text-base sm:text-lg py-6">
+                      <Link href="/products">Shop This Deal</Link>
                     </Button>
                   </div>
                 </div>
@@ -169,23 +171,17 @@ export function SeasonalOffers() {
         </div>
 
         {/* Newsletter Signup CTA */}
-        <div className="mt-16 text-center bg-white rounded-2xl p-8 shadow-lg">
-          <h3 className="text-2xl font-bold font-playfair text-earth mb-4">
+        <div className="mt-16 text-center bg-white rounded-2xl p-6 sm:p-8 shadow-lg">
+          <h3 className="text-xl sm:text-2xl font-bold font-playfair text-earth mb-4">
             Never Miss a Deal
           </h3>
           <p className="text-gray-600 mb-6">
             Subscribe to our newsletter and be the first to know about exclusive offers and seasonal discounts.
           </p>
-          <div className="flex max-w-md mx-auto space-x-2">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage"
-            />
-            <Button className="btn-sage px-6">
-              Subscribe
-            </Button>
-          </div>
+          <NewsletterForm
+            className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
+            buttonClassName="btn-sage px-6"
+          />
         </div>
       </div>
     </section>

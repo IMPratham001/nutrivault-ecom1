@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -42,7 +43,6 @@ const heroSlides = [
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -129,7 +129,7 @@ export function HeroSection() {
               </motion.div>
               
               <motion.h1 
-                className="text-4xl lg:text-6xl font-bold font-playfair text-earth leading-tight"
+                className="text-3xl sm:text-4xl lg:text-6xl font-bold font-playfair text-earth leading-tight"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -159,7 +159,7 @@ export function HeroSection() {
 
             {/* Price */}
             <motion.div 
-              className="flex items-center space-x-4"
+              className="flex flex-wrap items-center gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
@@ -182,28 +182,31 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
+              {/* Both hero buttons were inert — they now go to the pages they promise. */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button size="lg" className="btn-earth text-lg px-8 py-6">
-                  Shop Now
+                <Button asChild size="lg" className="btn-earth text-base sm:text-lg px-8 py-6 w-full sm:w-auto">
+                  <Link href="/products">Shop Now</Link>
                 </Button>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button variant="outline" size="lg" className="text-lg px-8 py-6 border-sage text-sage hover:bg-sage hover:text-white">
-                  <Play className="h-5 w-5 mr-2" />
-                  Watch Story
+                <Button asChild variant="outline" size="lg" className="text-base sm:text-lg px-8 py-6 w-full sm:w-auto border-sage text-sage hover:bg-sage hover:text-white">
+                  <Link href="/about">
+                    <Play className="h-5 w-5 mr-2" />
+                    Watch Story
+                  </Link>
                 </Button>
               </motion.div>
             </motion.div>
 
             {/* Trust Indicators */}
             <motion.div 
-              className="flex items-center space-x-8 pt-4"
+              className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
@@ -278,6 +281,7 @@ export function HeroSection() {
               <Button
                 variant="outline"
                 size="icon"
+                aria-label="Previous slide"
                 className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-lg"
                 onClick={prevSlide}
               >
@@ -292,6 +296,7 @@ export function HeroSection() {
               <Button
                 variant="outline"
                 size="icon"
+                aria-label="Next slide"
                 className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-lg"
                 onClick={nextSlide}
               >
@@ -301,16 +306,25 @@ export function HeroSection() {
 
             {/* Slide Indicators */}
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2">
+              {/* 44px hit area around a 12px dot — the dot alone was far below the
+                  minimum tap target on touch devices. */}
               {heroSlides.map((_, index) => (
                 <motion.button
                   key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentSlide ? 'bg-sage' : 'bg-white/50'
-                  }`}
+                  type="button"
+                  aria-label={`Show slide ${index + 1}`}
+                  aria-current={index === currentSlide}
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage"
                   onClick={() => setCurrentSlide(index)}
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.8 }}
-                />
+                >
+                  <span
+                    className={`block w-3 h-3 rounded-full transition-all duration-300 ${
+                      index === currentSlide ? 'bg-sage' : 'bg-white/50'
+                    }`}
+                  />
+                </motion.button>
               ))}
             </div>
           </motion.div>

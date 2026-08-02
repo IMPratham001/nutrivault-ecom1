@@ -74,16 +74,22 @@ function SearchResults() {
           )}
           
           {/* Search Form */}
-          <form onSubmit={handleSearch} className="max-w-md">
-            <div className="relative">
+          <form onSubmit={handleSearch} className="flex max-w-md gap-2">
+            <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search for products"
                 placeholder="Search for products..."
                 className="pl-10 pr-4"
               />
             </div>
+            {/* The form had no submit control — on touch, only the keyboard's
+                "Go" key could trigger it. */}
+            <Button type="submit" className="btn-sage flex-shrink-0">
+              Search
+            </Button>
           </form>
         </div>
 
@@ -131,16 +137,19 @@ function SearchResults() {
                         </Badge>
                       )}
                       
+                      {/* Kept visible below lg — hover never fires on touch, which
+                          made these the only unreachable add-to-cart on the site. */}
                       <Button
                         variant="outline"
                         size="icon"
-                        className="absolute top-3 right-3 bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-label={`Save ${product.name} to wishlist`}
+                        className="absolute top-3 right-3 bg-white/90 hover:bg-white opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity"
                         onClick={() => addToWishlist(product)}
                       >
                         <Heart className="h-4 w-4" />
                       </Button>
 
-                      <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute bottom-3 left-3 right-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                         <Button 
                           className="w-full btn-sage" 
                           onClick={() => addToCart(product)}
@@ -153,7 +162,9 @@ function SearchResults() {
                     </div>
 
                     <div className="p-4">
-                      <Link href={`/products/${product.slug}`}>
+                      {/* Detail routes are pre-rendered by numeric id, not by slug —
+                          the slug URLs 404 on the static export. */}
+                      <Link href={`/products/${product.id}`}>
                         <h3 className="font-semibold text-lg text-earth hover:text-sage transition-colors line-clamp-1">
                           {product.name}
                         </h3>

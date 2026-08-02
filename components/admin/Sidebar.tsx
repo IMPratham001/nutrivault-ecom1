@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -98,17 +99,27 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed, onCollapse }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const setUser = useStore((state) => state.setUser);
+
+  // Clears the session the storefront header also reads from.
+  const handleLogout = () => {
+    setUser(null);
+    router.push('/');
+  };
 
   return (
+    // Always icon-width below lg: a fixed 256px rail left roughly 60px for the
+    // dashboard itself at 320px. It expands as soon as there is room for it.
     <div className={cn(
-      "bg-white border-r border-gray-200 transition-all duration-300 flex flex-col",
-      collapsed ? "w-16" : "w-64"
+      "bg-white border-r border-gray-200 transition-all duration-300 flex flex-col flex-shrink-0",
+      collapsed ? "w-16" : "w-16 lg:w-64"
     )}>
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
           {!collapsed && (
-            <div className="flex items-center space-x-2">
+            <div className="hidden lg:flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-yellow-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">N</span>
               </div>
@@ -122,8 +133,9 @@ export function Sidebar({ collapsed, onCollapse }: SidebarProps) {
           <Button
             variant="ghost"
             size="icon"
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             onClick={() => onCollapse(!collapsed)}
-            className="hover:bg-gray-100"
+            className="hidden lg:inline-flex hover:bg-gray-100"
           >
             <ChevronLeft className={cn(
               "h-4 w-4 transition-transform",
@@ -141,28 +153,30 @@ export function Sidebar({ collapsed, onCollapse }: SidebarProps) {
             const Icon = item.icon;
             
             return (
-              <Link key={item.href} href={item.href}>
-                <Button
-                  variant={isActive ? "secondary" : "ghost"}
-                  className={cn(
-                    "w-full justify-start transition-colors",
-                    collapsed ? "px-2" : "px-3",
-                    isActive && "bg-sage/10 text-sage hover:bg-sage/20"
-                  )}
-                >
+              <Button
+                key={item.href}
+                asChild
+                variant={isActive ? "secondary" : "ghost"}
+                className={cn(
+                  "w-full justify-start transition-colors",
+                  collapsed ? "px-2" : "px-2 lg:px-3",
+                  isActive && "bg-sage/10 text-sage hover:bg-sage/20"
+                )}
+              >
+                <Link href={item.href} title={item.title}>
                   <Icon className="h-4 w-4 flex-shrink-0" />
                   {!collapsed && (
                     <>
-                      <span className="ml-2 truncate">{item.title}</span>
+                      <span className="hidden lg:inline ml-2 truncate">{item.title}</span>
                       {item.badge && (
-                        <Badge className="ml-auto bg-red-500 text-white text-xs">
+                        <Badge className="hidden lg:inline-flex ml-auto bg-red-500 text-white text-xs">
                           {item.badge}
                         </Badge>
                       )}
                     </>
                   )}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             );
           })}
         </nav>
@@ -172,13 +186,15 @@ export function Sidebar({ collapsed, onCollapse }: SidebarProps) {
       <div className="p-4 border-t border-gray-200">
         <Button
           variant="ghost"
+          title="Logout"
+          onClick={handleLogout}
           className={cn(
             "w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50",
-            collapsed ? "px-2" : "px-3"
+            collapsed ? "px-2" : "px-2 lg:px-3"
           )}
         >
           <LogOut className="h-4 w-4 flex-shrink-0" />
-          {!collapsed && <span className="ml-2">Logout</span>}
+          {!collapsed && <span className="hidden lg:inline ml-2">Logout</span>}
         </Button>
       </div>
     </div>

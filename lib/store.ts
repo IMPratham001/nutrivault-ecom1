@@ -30,6 +30,44 @@ export interface Product {
   featured: boolean;
 }
 
+/**
+ * The listing/card shape used across the home, products, search and wishlist
+ * grids is narrower than the full `Product` the cart stores. This widens it so
+ * every grid can call `addToCart` instead of leaving the button inert.
+ */
+export interface ProductCard {
+  id: number;
+  name: string;
+  description?: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  category?: string;
+  rating?: number;
+  reviews?: number;
+  inStock?: boolean;
+}
+
+export function toCartProduct(card: ProductCard): Product {
+  return {
+    id: card.id,
+    name: card.name,
+    slug: card.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+    description: card.description ?? '',
+    price: card.price,
+    originalPrice: card.originalPrice,
+    images: [card.image],
+    category: card.category ?? 'general',
+    inStock: card.inStock ?? true,
+    stockCount: card.inStock === false ? 0 : 100,
+    rating: card.rating ?? 0,
+    reviewCount: card.reviews ?? 0,
+    nutritionalInfo: { calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0 },
+    tags: [],
+    featured: false,
+  };
+}
+
 export interface CartItem extends Product {
   quantity: number;
   selectedWeight?: string;

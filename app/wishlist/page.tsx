@@ -61,21 +61,21 @@ export default function WishlistPage() {
         </nav>
 
         {/* Page Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold font-playfair text-earth mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold font-playfair text-earth mb-2">
               My Wishlist
             </h1>
             <p className="text-gray-600">
               {wishlist.length} {wishlist.length === 1 ? 'item' : 'items'} saved for later
             </p>
           </div>
-          <Link href="/products">
-            <Button variant="outline">
+          <Button asChild variant="outline" className="self-start">
+            <Link href="/products">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Continue Shopping
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
 
         {/* Wishlist Items */}
@@ -111,13 +111,16 @@ export default function WishlistPage() {
                     <Button
                       variant="outline"
                       size="icon"
+                      aria-label={`Remove ${product.name} from wishlist`}
                       className="absolute top-3 right-3 bg-white/90 hover:bg-red-50 text-red-500 hover:text-red-700"
                       onClick={() => removeFromWishlist(product.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
 
-                    <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* Hover-only overlay is decorative here — the card below carries
+                        the same action for touch users. */}
+                    <div className="hidden lg:block absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Button 
                         className="w-full btn-sage" 
                         onClick={() => addToCart(product)}
@@ -130,7 +133,8 @@ export default function WishlistPage() {
                   </div>
 
                   <div className="p-4">
-                    <Link href={`/products/${product.slug}`}>
+                    {/* Detail routes are pre-rendered by numeric id, not by slug. */}
+                    <Link href={`/products/${product.id}`}>
                       <h3 className="font-semibold text-lg text-earth hover:text-sage transition-colors line-clamp-1">
                         {product.name}
                       </h3>
@@ -170,8 +174,9 @@ export default function WishlistPage() {
                       <Button
                         variant="outline"
                         size="icon"
+                        aria-label={`Remove ${product.name} from wishlist`}
                         onClick={() => removeFromWishlist(product.id)}
-                        className="text-red-500 hover:text-red-700"
+                        className="flex-shrink-0 text-red-500 hover:text-red-700"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

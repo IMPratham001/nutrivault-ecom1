@@ -28,7 +28,7 @@ export function TestimonialsSection() {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-br from-sage/5 to-green-50">
+    <section className="py-12 md:py-16 bg-gradient-to-br from-sage/5 to-green-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div 
@@ -59,7 +59,7 @@ export function TestimonialsSection() {
               transition={{ duration: 0.5 }}
             >
               <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
-                <CardContent className="p-8 lg:p-12">
+                <CardContent className="p-6 sm:p-8 lg:p-12">
                   <div className="text-center">
                     {/* Quote Icon */}
                     <motion.div
@@ -92,7 +92,7 @@ export function TestimonialsSection() {
 
                     {/* Comment */}
                     <motion.blockquote 
-                      className="text-xl lg:text-2xl text-gray-700 font-medium leading-relaxed mb-8"
+                      className="text-lg sm:text-xl lg:text-2xl text-gray-700 font-medium leading-relaxed mb-8"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5 }}
@@ -102,7 +102,7 @@ export function TestimonialsSection() {
 
                     {/* Customer Info */}
                     <motion.div 
-                      className="flex items-center justify-center space-x-4"
+                      className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 }}
@@ -140,28 +140,37 @@ export function TestimonialsSection() {
             <Button
               variant="outline"
               size="icon"
+              aria-label="Previous testimonial"
               onClick={prevTestimonial}
               className="rounded-full"
             >
               <ChevronLeft className="h-5 w-5" />
             </Button>
 
-            {/* Indicators */}
-            <div className="flex space-x-2">
+            {/* Indicators — 44px hit area wrapping a 12px dot. */}
+            <div className="flex">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentTestimonial ? 'bg-sage w-8' : 'bg-gray-300'
-                  }`}
+                  type="button"
+                  aria-label={`Show testimonial ${index + 1}`}
+                  aria-current={index === currentTestimonial}
+                  className="flex min-h-[44px] min-w-[24px] items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage"
                   onClick={() => setCurrentTestimonial(index)}
-                />
+                >
+                  <span
+                    className={`block h-3 rounded-full transition-all duration-300 ${
+                      index === currentTestimonial ? 'bg-sage w-8' : 'bg-gray-300 w-3'
+                    }`}
+                  />
+                </button>
               ))}
             </div>
 
             <Button
               variant="outline"
               size="icon"
+              aria-label="Next testimonial"
               onClick={nextTestimonial}
               className="rounded-full"
             >
@@ -180,7 +189,7 @@ export function TestimonialsSection() {
         >
           <div className="text-center">
             <motion.div 
-              className="text-4xl font-bold text-sage mb-2"
+              className="text-3xl sm:text-4xl font-bold text-sage mb-2"
               initial={{ opacity: 0, scale: 0 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -192,7 +201,7 @@ export function TestimonialsSection() {
           </div>
           <div className="text-center">
             <motion.div 
-              className="text-4xl font-bold text-sage mb-2"
+              className="text-3xl sm:text-4xl font-bold text-sage mb-2"
               initial={{ opacity: 0, scale: 0 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -204,7 +213,7 @@ export function TestimonialsSection() {
           </div>
           <div className="text-center">
             <motion.div 
-              className="text-4xl font-bold text-sage mb-2"
+              className="text-3xl sm:text-4xl font-bold text-sage mb-2"
               initial={{ opacity: 0, scale: 0 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}

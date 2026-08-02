@@ -141,12 +141,13 @@ export default function LoginPage() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center space-x-2">
-                    <input type="checkbox" className="rounded" />
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <label className="flex min-h-[44px] items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" className="h-5 w-5 rounded accent-sage" />
                     <span className="text-sm text-gray-600">Remember me</span>
                   </label>
-                  <Link href="/auth/forgot-password" className="text-sm text-sage hover:underline">
+                  {/* No forgot-password route exists — recovery runs through support. */}
+                  <Link href="/contact" className="text-sm text-sage hover:underline">
                     Forgot password?
                   </Link>
                 </div>

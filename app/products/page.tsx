@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toast } from 'sonner';
+import { useStore, toCartProduct, type ProductCard } from '@/lib/store';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -124,6 +126,7 @@ const categories = [
 const origins = ['USA', 'Turkey', 'Jordan', 'India', 'Canada', 'Various'];
 
 export default function ProductsPage() {
+  const { addToCart, addToWishlist } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedOrigins, setSelectedOrigins] = useState<string[]>([]);
@@ -132,6 +135,16 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [inStockOnly, setInStockOnly] = useState(false);
+
+  // The header dropdown and the home category tiles link here with ?category=…,
+  // which the page previously ignored. Read from location rather than
+  // useSearchParams: the latter forces a Suspense boundary under `output: export`.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('category');
+    if (requested && categories.some((category) => category.id === requested)) {
+      setSelectedCategory(requested);
+    }
+  }, []);
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -143,6 +156,18 @@ export default function ProductsPage() {
 
     return matchesSearch && matchesCategory && matchesOrigin && matchesPrice && matchesStock;
   });
+
+  // The grid buttons were inert; both now feed the same persisted store the
+  // header badge and cart drawer already read from.
+  const handleAddToCart = (product: ProductCard) => {
+    addToCart(toCartProduct(product));
+    toast.success(`${product.name} added to cart`);
+  };
+
+  const handleAddToWishlist = (product: ProductCard) => {
+    addToWishlist(toCartProduct(product));
+    toast.success(`${product.name} saved to wishlist`);
+  };
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
@@ -380,18 +405,23 @@ export default function ProductsPage() {
                             </div>
                           )}
 
+                          {/* Visible by default below lg — touch devices never trigger
+                              :hover, which left these controls unreachable on mobile. */}
                           <Button
                             variant="outline"
                             size="icon"
-                            className="absolute top-3 right-3 bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
+                            aria-label={`Save ${product.name} to wishlist`}
+                            onClick={() => handleAddToWishlist(product)}
+                            className="absolute top-3 right-3 bg-white/90 hover:bg-white opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity"
                           >
                             <Heart className="h-4 w-4" />
                           </Button>
 
-                          <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button 
-                              className="w-full btn-sage" 
+                          <div className="absolute bottom-3 left-3 right-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                            <Button
+                              className="w-full btn-sage"
                               disabled={!product.inStock}
+                              onClick={() => handleAddToCart(product)}
                             >
                               <ShoppingCart className="h-4 w-4 mr-2" />
                               Add to Cart
@@ -447,8 +477,8 @@ export default function ProductsPage() {
                       </>
                     ) : (
                       /* List View */
-                      <div className="flex p-4 space-x-4">
-                        <div className="relative w-32 h-32 flex-shrink-0 overflow-hidden rounded-lg">
+                      <div className="flex p-4 gap-4">
+                        <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 overflow-hidden rounded-lg">
                           <Image
                             src={product.image}
                             alt={product.name}
@@ -462,9 +492,11 @@ export default function ProductsPage() {
                           )}
                         </div>
 
-                        <div className="flex-1">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
+                        <div className="flex-1 min-w-0">
+                          {/* Stacks below sm: the row could not hold a 128px image,
+                              the copy block and a button column inside 320px. */}
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                            <div className="flex-1 min-w-0">
                               <Link href={`/products/${product.id}`}>
                                 <h3 className="font-semibold text-lg text-earth hover:text-sage transition-colors">
                                   {product.name}
@@ -493,7 +525,7 @@ export default function ProductsPage() {
                                 </span>
                               </div>
 
-                              <div className="flex items-center space-x-4">
+                              <div className="flex flex-wrap items-center gap-2">
                                 <div className="flex items-center space-x-2">
                                   <span className="text-xl font-bold text-earth">
                                     ${product.price}
@@ -515,16 +547,19 @@ export default function ProductsPage() {
                               </div>
                             </div>
 
-                            <div className="flex flex-col space-y-2 ml-4">
+                            <div className="flex flex-row sm:flex-col gap-2 sm:ml-4 flex-shrink-0">
                               <Button
                                 variant="outline"
                                 size="icon"
+                                aria-label={`Save ${product.name} to wishlist`}
+                                onClick={() => handleAddToWishlist(product)}
                               >
                                 <Heart className="h-4 w-4" />
                               </Button>
-                              <Button 
-                                className="btn-sage" 
+                              <Button
+                                className="btn-sage flex-1 sm:flex-none"
                                 disabled={!product.inStock}
+                                onClick={() => handleAddToCart(product)}
                               >
                                 <ShoppingCart className="h-4 w-4 mr-2" />
                                 Add to Cart

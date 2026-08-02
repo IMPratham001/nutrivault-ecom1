@@ -7,8 +7,9 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Leaf, 
+import { WHATSAPP_URL } from '@/lib/whatsapp';
+import {
+  Leaf,
   Award, 
   Globe, 
   Users,
@@ -88,7 +89,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <div>
             <Badge className="bg-sage/10 text-sage mb-4">Our Story</Badge>
-            <h1 className="text-4xl lg:text-5xl font-bold font-playfair text-earth mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-playfair text-earth mb-6">
               Bringing Nature's Best to Your Table
             </h1>
             <p className="text-lg text-gray-600 mb-6">
@@ -117,7 +118,9 @@ export default function AboutPage() {
                 className="object-cover"
               />
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg">
+            {/* The negative left offset pushed this card past the viewport edge on
+                mobile; it only overhangs once there is gutter to overhang into. */}
+            <div className="absolute -bottom-6 left-0 sm:-left-6 bg-white p-4 sm:p-6 rounded-xl shadow-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 <span className="font-bold text-earth">4.9/5</span>
@@ -128,11 +131,11 @@ export default function AboutPage() {
         </div>
 
         {/* Stats Section */}
-        <div className="bg-gradient-to-r from-sage to-green-600 rounded-2xl p-8 mb-16">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center text-white">
+        <div className="bg-gradient-to-r from-sage to-green-600 rounded-2xl p-6 sm:p-8 mb-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center text-white">
             {stats.map((stat, index) => (
               <div key={index}>
-                <p className="text-3xl lg:text-4xl font-bold mb-2">{stat.number}</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">{stat.number}</p>
                 <p className="text-green-100">{stat.label}</p>
               </div>
             ))}
@@ -246,7 +249,7 @@ export default function AboutPage() {
         </div>
 
         {/* Certifications & Trust */}
-        <div className="bg-gray-50 rounded-2xl p-8 mb-16">
+        <div className="bg-gray-50 rounded-2xl p-6 sm:p-8 mb-16">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold font-playfair text-earth mb-4">
               Trusted & Certified
@@ -256,7 +259,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
             <div className="flex flex-col items-center">
               <Shield className="h-12 w-12 text-sage mb-2" />
               <p className="font-medium">FDA Approved</p>
@@ -277,24 +280,23 @@ export default function AboutPage() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center bg-gradient-to-r from-earth to-yellow-900 rounded-2xl p-12 text-white">
-          <h2 className="text-3xl font-bold font-playfair mb-4">
+        <div className="text-center bg-gradient-to-r from-earth to-yellow-900 rounded-2xl p-6 sm:p-8 lg:p-12 text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold font-playfair mb-4">
             Ready to Experience Premium Quality?
           </h2>
-          <p className="text-xl text-yellow-100 mb-8">
+          <p className="text-lg sm:text-xl text-yellow-100 mb-8">
             Join thousands of satisfied customers who trust NutriVault for their dry fruit needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/products">
-              <Button size="lg" className="bg-white text-earth hover:bg-gray-100">
-                Shop Now
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-earth">
+            <Button asChild size="lg" className="bg-white text-earth hover:bg-gray-100">
+              <Link href="/products">Shop Now</Link>
+            </Button>
+            {/* "Contact Us" is an enquiry CTA, so it opens the chat directly. */}
+            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-earth">
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
                 Contact Us
-              </Button>
-            </Link>
+              </a>
+            </Button>
           </div>
         </div>
       </div>

@@ -1,32 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Mail, Gift, Zap, CheckCircle } from 'lucide-react';
+import { NewsletterForm } from '@/components/layout/NewsletterForm';
+import { Mail, Gift, Zap } from 'lucide-react';
 
 export function NewsletterSection() {
-  const [email, setEmail] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsSubscribed(true);
-    setIsLoading(false);
-    setEmail('');
-  };
-
   return (
-    <section className="py-16 bg-gradient-to-br from-earth to-yellow-900 text-white relative overflow-hidden">
+    <section className="py-12 md:py-16 bg-gradient-to-br from-earth to-yellow-900 text-white relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-20 h-20 border border-white/20 rounded-full" />
@@ -49,10 +31,10 @@ export function NewsletterSection() {
               <Mail className="h-4 w-4 mr-1" />
               Newsletter
             </Badge>
-            <h2 className="text-3xl lg:text-4xl font-bold font-playfair mb-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-playfair mb-4">
               Stay Updated with Exclusive Offers
             </h2>
-            <p className="text-yellow-100 text-lg max-w-2xl mx-auto">
+            <p className="text-yellow-100 text-base sm:text-lg max-w-2xl mx-auto">
               Join our community of health-conscious food lovers and get access to exclusive deals, 
               recipes, and nutrition tips delivered straight to your inbox.
             </p>
@@ -105,43 +87,15 @@ export function NewsletterSection() {
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            {isSubscribed ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center p-8 bg-white/10 rounded-lg backdrop-blur-sm"
-              >
-                <CheckCircle className="h-12 w-12 text-green-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Welcome to the Family!</h3>
-                <p className="text-yellow-100">
-                  Thank you for subscribing. Check your email for a special welcome offer!
-                </p>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-yellow-200 focus:border-yellow-400"
-                    required
-                  />
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="bg-yellow-500 text-yellow-900 hover:bg-yellow-400 px-8"
-                  >
-                    {isLoading ? 'Subscribing...' : 'Subscribe'}
-                  </Button>
-                </div>
-                <p className="text-xs text-yellow-200 text-center">
-                  By subscribing, you agree to our Privacy Policy and Terms of Service. 
-                  Unsubscribe at any time.
-                </p>
-              </form>
-            )}
+            <div className="space-y-4">
+              <NewsletterForm
+                inputClassName="bg-white/10 border-white/20 text-white placeholder:text-yellow-200 focus:border-yellow-400"
+                buttonClassName="bg-yellow-500 text-yellow-900 hover:bg-yellow-400 px-8"
+              />
+              <p className="text-xs text-yellow-200 text-center">
+                Unsubscribe at any time — we only send offers, recipes and nutrition tips.
+              </p>
+            </div>
           </motion.div>
 
           {/* Social Proof */}

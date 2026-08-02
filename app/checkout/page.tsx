@@ -79,13 +79,15 @@ export default function CheckoutPage() {
         </nav>
 
         {/* Progress Steps */}
+        {/* Three 40px markers, three labels and two 64px connectors measured well
+            over 320px — the gaps and the connector collapse on small screens. */}
         <div className="mb-8">
-          <div className="flex items-center justify-center space-x-8">
+          <div className="flex items-center justify-center gap-2 sm:gap-8">
             {[1, 2, 3].map((stepNumber) => (
               <div key={stepNumber} className="flex items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
-                  step >= stepNumber 
-                    ? 'bg-sage border-sage text-white' 
+                <div className={`w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-full flex items-center justify-center border-2 ${
+                  step >= stepNumber
+                    ? 'bg-sage border-sage text-white'
                     : 'border-gray-300 text-gray-400'
                 }`}>
                   {step > stepNumber ? (
@@ -94,7 +96,7 @@ export default function CheckoutPage() {
                     stepNumber
                   )}
                 </div>
-                <span className={`ml-2 text-sm ${
+                <span className={`ml-2 text-xs sm:text-sm ${
                   step >= stepNumber ? 'text-sage font-medium' : 'text-gray-400'
                 }`}>
                   {stepNumber === 1 && 'Shipping'}
@@ -102,7 +104,7 @@ export default function CheckoutPage() {
                   {stepNumber === 3 && 'Review'}
                 </span>
                 {stepNumber < 3 && (
-                  <div className={`w-16 h-0.5 ml-4 ${
+                  <div className={`hidden sm:block w-16 h-0.5 ml-4 ${
                     step > stepNumber ? 'bg-sage' : 'bg-gray-300'
                   }`} />
                 )}
@@ -317,7 +319,7 @@ export default function CheckoutPage() {
                     )}
                   </div>
 
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
                     <Button variant="outline" onClick={handlePrevStep}>
                       <ArrowLeft className="h-4 w-4 mr-2" />
                       Back to Shipping
@@ -382,17 +384,17 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
                     <Button variant="outline" onClick={handlePrevStep}>
                       <ArrowLeft className="h-4 w-4 mr-2" />
                       Back to Payment
                     </Button>
-                    <Link href="/order-confirmation">
-                      <Button className="btn-earth">
+                    <Button asChild className="btn-earth">
+                      <Link href="/order-confirmation">
                         <Lock className="h-4 w-4 mr-2" />
                         Place Order
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

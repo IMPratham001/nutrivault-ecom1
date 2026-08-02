@@ -6,7 +6,6 @@ import { SeasonalOffers } from '@/components/home/SeasonalOffers';
 import { ProductCategories } from '@/components/home/ProductCategories';
 import { TestimonialsSection } from '@/components/home/TestimonialsSection';
 import { NewsletterSection } from '@/components/home/NewsletterSection';
-import { CartDrawer } from '@/components/ui/cart-drawer';
 
 export default function Home() {
   return (
@@ -19,7 +18,6 @@ export default function Home() {
       <TestimonialsSection />
       <NewsletterSection />
       <Footer />
-      <CartDrawer />
     </main>
   );
 }

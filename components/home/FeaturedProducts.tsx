@@ -1,9 +1,12 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useStore, toCartProduct, type ProductCard } from '@/lib/store';
 import { Star, ShoppingCart, Heart, Zap } from 'lucide-react';
 
 const featuredProducts = [
@@ -88,8 +91,20 @@ const featuredProducts = [
 ];
 
 export function FeaturedProducts() {
+  const { addToCart, addToWishlist } = useStore();
+
+  const handleAddToCart = (product: ProductCard) => {
+    addToCart(toCartProduct(product));
+    toast.success(`${product.name} added to cart`);
+  };
+
+  const handleAddToWishlist = (product: ProductCard) => {
+    addToWishlist(toCartProduct(product));
+    toast.success(`${product.name} saved to wishlist`);
+  };
+
   return (
-    <section className="py-16 bg-white">
+    <section className="py-12 md:py-16 bg-white">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -122,18 +137,21 @@ export function FeaturedProducts() {
                     {product.badge}
                   </Badge>
                   
-                  {/* Wishlist Button */}
+                  {/* Wishlist Button — always visible below lg: a touch device never
+                      fires :hover, so the hover-only controls were unreachable there. */}
                   <Button
                     variant="outline"
                     size="icon"
-                    className="absolute top-3 right-3 bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label={`Save ${product.name} to wishlist`}
+                    onClick={() => handleAddToWishlist(product)}
+                    className="absolute top-3 right-3 bg-white/90 hover:bg-white opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity"
                   >
                     <Heart className="h-4 w-4" />
                   </Button>
 
                   {/* Quick Add to Cart */}
-                  <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button className="w-full btn-sage">
+                  <div className="absolute bottom-3 left-3 right-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                    <Button className="w-full btn-sage" onClick={() => handleAddToCart(product)}>
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Add to Cart
                     </Button>
@@ -143,9 +161,11 @@ export function FeaturedProducts() {
                 {/* Product Info */}
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-lg text-earth line-clamp-1">
-                      {product.name}
-                    </h3>
+                    <Link href={`/products/${product.id}`}>
+                      <h3 className="font-semibold text-lg text-earth hover:text-sage transition-colors line-clamp-1">
+                        {product.name}
+                      </h3>
+                    </Link>
                   </div>
                   
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">
@@ -199,8 +219,8 @@ export function FeaturedProducts() {
 
         {/* View All Button */}
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" className="px-8 py-3 border-sage text-sage hover:bg-sage hover:text-white">
-            View All Products
+          <Button asChild size="lg" variant="outline" className="px-8 py-3 border-sage text-sage hover:bg-sage hover:text-white">
+            <Link href="/products">View All Products</Link>
           </Button>
         </div>
       </div>

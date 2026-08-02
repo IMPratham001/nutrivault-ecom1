@@ -140,16 +140,17 @@ export default function CartPage() {
         </nav>
 
         {/* Page Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold font-playfair text-earth">
+        {/* Stacks below sm — the heading and the button could not share a 320px row. */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold font-playfair text-earth">
             Shopping Cart ({cartItems.length} items)
           </h1>
-          <Link href="/products">
-            <Button variant="outline">
+          <Button asChild variant="outline" className="self-start">
+            <Link href="/products">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Continue Shopping
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -157,10 +158,12 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => (
               <Card key={item.id} className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-4">
+                <CardContent className="p-4 sm:p-6">
+                  {/* Image + details stay side by side; quantity and totals wrap
+                      underneath on narrow screens instead of overflowing the row. */}
+                  <div className="flex flex-wrap items-center gap-4">
                     {/* Product Image */}
-                    <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                    <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -177,7 +180,7 @@ export default function CartPage() {
                     </div>
 
                     {/* Product Details */}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-[8rem]">
                       <Link href={`/products/${item.id}`}>
                         <h3 className="font-semibold text-lg text-earth hover:text-sage transition-colors">
                           {item.name}
@@ -206,42 +209,46 @@ export default function CartPage() {
                       <Button
                         variant="outline"
                         size="icon"
+                        aria-label={`Decrease quantity of ${item.name}`}
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
                         disabled={item.quantity <= 1 || !item.inStock}
-                        className="h-8 w-8"
+                        className="h-10 w-10"
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
-                      
+
                       <Input
                         type="number"
+                        aria-label={`Quantity of ${item.name}`}
                         value={item.quantity}
                         onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
-                        className="w-16 text-center h-8"
+                        className="w-14 text-center h-10"
                         min="1"
                         max="10"
                         disabled={!item.inStock}
                       />
-                      
+
                       <Button
                         variant="outline"
                         size="icon"
+                        aria-label={`Increase quantity of ${item.name}`}
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         disabled={item.quantity >= 10 || !item.inStock}
-                        className="h-8 w-8"
+                        className="h-10 w-10"
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
 
                     {/* Item Total & Remove */}
-                    <div className="text-right">
-                      <p className="font-bold text-lg text-earth mb-2">
+                    <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-0 ml-auto">
+                      <p className="font-bold text-lg text-earth sm:mb-2">
                         ${(item.price * item.quantity).toFixed(2)}
                       </p>
                       <Button
                         variant="ghost"
                         size="sm"
+                        aria-label={`Remove ${item.name} from cart`}
                         onClick={() => removeItem(item.id)}
                         className="text-red-600 hover:text-red-700 hover:bg-red-50"
                       >
@@ -339,11 +346,9 @@ export default function CartPage() {
                   <span className="text-earth">${total.toFixed(2)}</span>
                 </div>
 
-                <Link href="/checkout">
-                  <Button size="lg" className="w-full btn-earth">
-                    Proceed to Checkout
-                  </Button>
-                </Link>
+                <Button asChild size="lg" className="w-full btn-earth">
+                  <Link href="/checkout">Proceed to Checkout</Link>
+                </Button>
 
                 {/* Trust Indicators */}
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t text-center">

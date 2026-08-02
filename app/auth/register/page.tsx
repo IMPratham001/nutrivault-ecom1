@@ -198,19 +198,21 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                <div className="flex items-start space-x-2">
-                  <input type="checkbox" className="mt-1 rounded" required />
+                {/* Was a bare input beside a span: the consent text was not clickable
+                    and the box itself was a ~13px tap target on the required gate. */}
+                <label className="flex items-start space-x-2 cursor-pointer">
+                  <input type="checkbox" className="mt-1 h-5 w-5 flex-shrink-0 rounded accent-sage" required />
                   <span className="text-sm text-gray-600">
                     I agree to the{' '}
-                    <Link href="/terms" className="text-sage hover:underline">
+                    <Link href="/about" className="text-sage hover:underline">
                       Terms of Service
                     </Link>{' '}
                     and{' '}
-                    <Link href="/privacy" className="text-sage hover:underline">
+                    <Link href="/about" className="text-sage hover:underline">
                       Privacy Policy
                     </Link>
                   </span>
-                </div>
+                </label>
 
                 <Button 
                   type="submit" 

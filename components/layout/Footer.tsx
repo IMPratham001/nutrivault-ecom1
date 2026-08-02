@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { NewsletterForm } from '@/components/layout/NewsletterForm';
+import { whatsappLink, WHATSAPP_URL } from '@/lib/whatsapp';
 import {
   Facebook,
   Instagram,
@@ -76,15 +77,11 @@ export function Footer() {
             <p className="text-yellow-200 mb-6">
               Get exclusive deals, health tips, and delicious recipes delivered to your inbox.
             </p>
-            <div className="flex max-w-md mx-auto space-x-2">
-              <Input
-                placeholder="Enter your email"
-                className="bg-white/10 border-white/20 text-white placeholder:text-yellow-200"
-              />
-              <Button className="btn-gold px-6">
-                Subscribe
-              </Button>
-            </div>
+            <NewsletterForm
+              className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
+              inputClassName="bg-white/10 border-white/20 text-white placeholder:text-yellow-200"
+              buttonClassName="btn-gold px-6"
+            />
           </div>
         </div>
       </div>
@@ -105,16 +102,16 @@ export function Footer() {
               We're committed to providing the highest quality, naturally sourced products.
             </p>
             <div className="flex space-x-4">
-              <Button variant="ghost" size="icon" className="text-yellow-400 hover:text-white hover:bg-white/10">
+              <Button variant="ghost" size="icon" aria-label="NutriVault on Facebook" className="text-yellow-400 hover:text-white hover:bg-white/10">
                 <Facebook className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-yellow-400 hover:text-white hover:bg-white/10">
+              <Button variant="ghost" size="icon" aria-label="NutriVault on Instagram" className="text-yellow-400 hover:text-white hover:bg-white/10">
                 <Instagram className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-yellow-400 hover:text-white hover:bg-white/10">
+              <Button variant="ghost" size="icon" aria-label="NutriVault on Twitter" className="text-yellow-400 hover:text-white hover:bg-white/10">
                 <Twitter className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-yellow-400 hover:text-white hover:bg-white/10">
+              <Button variant="ghost" size="icon" aria-label="NutriVault on YouTube" className="text-yellow-400 hover:text-white hover:bg-white/10">
                 <Youtube className="h-5 w-5" />
               </Button>
             </div>
@@ -127,9 +124,21 @@ export function Footer() {
               <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
               <li><Link href="/products" className="hover:text-white transition-colors">All Products</Link></li>
               <li><Link href="/blog" className="hover:text-white transition-colors">Blog & Recipes</Link></li>
-              <li><Link href="/wholesale" className="hover:text-white transition-colors">Wholesale</Link></li>
+              {/* Wholesale has no page of its own — bulk buyers go straight to a chat. */}
+              <li>
+                <a
+                  href={whatsappLink(
+                    "Hi NutriVault, I'd like wholesale pricing for bulk dry fruit orders."
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors"
+                >
+                  Wholesale Enquiries
+                </a>
+              </li>
               <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
+              <li><Link href="/search" className="hover:text-white transition-colors">Search Products</Link></li>
             </ul>
           </div>
 
@@ -137,12 +146,25 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-lg mb-4">Customer Service</h4>
             <ul className="space-y-2 text-yellow-200">
-              <li><Link href="/help" className="hover:text-white transition-colors">Help Center</Link></li>
-              <li><Link href="/shipping" className="hover:text-white transition-colors">Shipping Info</Link></li>
-              <li><Link href="/returns" className="hover:text-white transition-colors">Returns & Exchanges</Link></li>
-              <li><Link href="/track-order" className="hover:text-white transition-colors">Track Your Order</Link></li>
-              <li><Link href="/size-guide" className="hover:text-white transition-colors">Size Guide</Link></li>
-              <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+              {/* These support topics live on the contact page rather than as separate
+                  routes — linking to routes that don't exist would 404 on the static export. */}
+              <li><Link href="/contact" className="hover:text-white transition-colors">Help Center</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">Shipping Info</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">Returns & Exchanges</Link></li>
+              <li><Link href="/account" className="hover:text-white transition-colors">Track Your Order</Link></li>
+              <li>
+                <a
+                  href={whatsappLink(
+                    "Hi NutriVault, I have a question about my order."
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors"
+                >
+                  Chat with Support
+                </a>
+              </li>
+              <li><Link href="/about" className="hover:text-white transition-colors">Our Story</Link></li>
             </ul>
           </div>
 
@@ -158,14 +180,25 @@ export function Footer() {
                 </div>
               </div>
               
+              {/* The 555 placeholder number went nowhere — this is a contact route
+                  that actually opens for the visitor. */}
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-yellow-400" />
-                <p>+1 (555) 123-4567</p>
+                <Phone className="h-5 w-5 flex-shrink-0 text-yellow-400" />
+                <a
+                  href={whatsappLink("Hi NutriVault, I'd like to know more about your products.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors"
+                >
+                  +91 94298 61654 (WhatsApp)
+                </a>
               </div>
-              
+
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-yellow-400" />
-                <p>support@nutrivault.com</p>
+                <Mail className="h-5 w-5 flex-shrink-0 text-yellow-400" />
+                <a href="mailto:support@nutrivault.com" className="break-all hover:text-white transition-colors">
+                  support@nutrivault.com
+                </a>
               </div>
             </div>
           </div>
@@ -177,13 +210,23 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-yellow-200 text-sm">
-            © 2025 NutriVault. All rights reserved.
+          <p className="text-yellow-200 text-sm text-center md:text-left">
+            © 2025 NutriVault. All rights reserved. · Made by{' '}
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-yellow-400 hover:text-white transition-colors"
+            >
+              Techureka
+            </a>
           </p>
-          <div className="flex space-x-6 text-sm text-yellow-200">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link>
+          {/* Only routes that actually exist in the export are linked here — the previous
+              /privacy, /terms and /cookies links had no pages behind them. */}
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-yellow-200">
+            <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
+            <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
+            <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
           </div>
         </div>
       </div>

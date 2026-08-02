@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -10,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { 
   User, 
   Package, 
@@ -94,7 +96,9 @@ export default function AccountPage() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6">
+          {/* TabsList is a fixed-height inline-flex by default, so six triggers over
+              multiple rows were clipped — h-auto lets the wrapped rows render. */}
+          <TabsList className="grid h-auto w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
@@ -141,16 +145,14 @@ export default function AccountPage() {
 
             {/* Recent Orders */}
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
+              {/* The full history is the Orders tab above, not a separate route. */}
+              <CardHeader>
                 <CardTitle>Recent Orders</CardTitle>
-                <Link href="/account/orders">
-                  <Button variant="outline" size="sm">View All</Button>
-                </Link>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {recentOrders.slice(0, 3).map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div key={order.id} className="flex flex-wrap gap-3 items-center justify-between p-4 bg-gray-50 rounded-lg">
                       <div>
                         <p className="font-medium">{order.id}</p>
                         <p className="text-sm text-gray-600">{order.date} • {order.items} items</p>
@@ -199,18 +201,14 @@ export default function AccountPage() {
               <CardContent>
                 <div className="space-y-4">
                   {recentOrders.map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <p className="font-medium">{order.id}</p>
-                            <p className="text-sm text-gray-600">
-                              {order.date} • {order.items} items • ${order.total}
-                            </p>
-                          </div>
-                        </div>
+                    <div key={order.id} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium break-all">{order.id}</p>
+                        <p className="text-sm text-gray-600">
+                          {order.date} • {order.items} items • ${order.total}
+                        </p>
                       </div>
-                      <div className="flex items-center space-x-4">
+                      <div className="flex flex-wrap items-center gap-3">
                         <Badge 
                           variant={order.status === 'Delivered' ? 'default' : 'secondary'}
                         >
@@ -246,7 +244,10 @@ export default function AccountPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {wishlistItems.map((item) => (
                     <div key={item.id} className="border rounded-lg p-4">
-                      <div className="aspect-square bg-gray-100 rounded-lg mb-4"></div>
+                      {/* The item image was defined in the data but never rendered. */}
+                      <div className="relative aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                        <Image src={item.image} alt={item.name} fill className="object-cover" />
+                      </div>
                       <h3 className="font-medium mb-2">{item.name}</h3>
                       <div className="flex items-center space-x-2 mb-3">
                         <span className="font-bold text-earth">${item.price}</span>
@@ -276,7 +277,7 @@ export default function AccountPage() {
           {/* Addresses Tab */}
           <TabsContent value="addresses" className="space-y-6">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
+              <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <CardTitle>Saved Addresses</CardTitle>
                 <Button className="btn-sage">Add New Address</Button>
               </CardHeader>
@@ -321,13 +322,13 @@ export default function AccountPage() {
           {/* Payment Tab */}
           <TabsContent value="payment" className="space-y-6">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
+              <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <CardTitle>Payment Methods</CardTitle>
                 <Button className="btn-sage">Add New Card</Button>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
                       <CreditCard className="h-8 w-8 text-gray-400" />
                       <div>
@@ -350,7 +351,7 @@ export default function AccountPage() {
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
+              <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <CardTitle>Personal Information</CardTitle>
                 <Button 
                   variant="outline" 
@@ -424,7 +425,7 @@ export default function AccountPage() {
                     <p className="font-medium">Order Updates</p>
                     <p className="text-sm text-gray-600">Get notified about order status changes</p>
                   </div>
-                  <input type="checkbox" defaultChecked className="toggle" />
+                  <Switch defaultChecked aria-label="Toggle order update notifications" />
                 </div>
                 
                 <div className="flex items-center justify-between">
@@ -432,7 +433,7 @@ export default function AccountPage() {
                     <p className="font-medium">Promotional Emails</p>
                     <p className="text-sm text-gray-600">Receive offers and product updates</p>
                   </div>
-                  <input type="checkbox" defaultChecked className="toggle" />
+                  <Switch defaultChecked aria-label="Toggle promotional emails" />
                 </div>
                 
                 <div className="flex items-center justify-between">
@@ -440,7 +441,7 @@ export default function AccountPage() {
                     <p className="font-medium">SMS Notifications</p>
                     <p className="text-sm text-gray-600">Get text updates for urgent notifications</p>
                   </div>
-                  <input type="checkbox" className="toggle" />
+                  <Switch aria-label="Toggle SMS notifications" />
                 </div>
               </CardContent>
             </Card>

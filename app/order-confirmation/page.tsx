@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { 
-  CheckCircle, 
+import { whatsappLink } from '@/lib/whatsapp';
+import {
+  CheckCircle,
   Package, 
   Truck, 
   Mail,
@@ -117,24 +118,26 @@ export default function OrderConfirmationPage() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="outline" className="flex items-center">
+            {/* No receipt endpoint exists on a static export, so this prints the
+                confirmation the customer is already looking at. */}
+            <Button variant="outline" className="flex items-center" onClick={() => window.print()}>
               <Download className="h-4 w-4 mr-2" />
               Download Receipt
             </Button>
-            
-            <Link href="/account/orders">
-              <Button variant="outline" className="flex items-center">
+
+            <Button asChild variant="outline" className="flex items-center">
+              <Link href="/account">
                 <Package className="h-4 w-4 mr-2" />
                 Track Order
-              </Button>
-            </Link>
-            
-            <Link href="/products">
-              <Button className="btn-sage flex items-center">
+              </Link>
+            </Button>
+
+            <Button asChild className="btn-sage flex items-center">
+              <Link href="/products">
                 Continue Shopping
                 <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
 
           {/* Support Info */}
@@ -144,16 +147,19 @@ export default function OrderConfirmationPage() {
               If you have any questions about your order, our customer support team is here to help.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact">
-                <Button variant="outline" size="sm">
-                  Contact Support
-                </Button>
-              </Link>
-              <Link href="/help">
-                <Button variant="outline" size="sm">
-                  Visit Help Center
-                </Button>
-              </Link>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/contact">Contact Support</Link>
+              </Button>
+              {/* /help has no page — order questions go straight to a chat. */}
+              <Button asChild variant="outline" size="sm">
+                <a
+                  href={whatsappLink('Hi NutriVault, I have a question about my recent order.')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Chat on WhatsApp
+                </a>
+              </Button>
             </div>
           </div>
         </div>
