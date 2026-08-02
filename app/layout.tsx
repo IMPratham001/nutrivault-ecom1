@@ -11,7 +11,20 @@ const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfa
 const siteDescription =
   'Discover the finest selection of premium dry fruits, nuts, and healthy snacks sourced from around the world.';
 
+// Why: without metadataBase Next resolves relative OG/Twitter image URLs against
+// http://localhost:3000, which would ship localhost links in production share cards.
+// How: Vercel injects both vars at build time, so `output: 'export'` inlines the real
+// host during the deploy build with no server involved. Production domain first (stable
+// across deploys), per-deploy URL for previews, localhost for `next dev`.
+const siteUrl =
+  process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL}`
+    : 'http://localhost:3000';
+
 export const metadata: Metadata = {
+  // Inherited by every route segment, including the generateMetadata in
+  // /products/[id] and /blog/[id].
+  metadataBase: new URL(siteUrl),
   // Template so per-route metadata reads "Products | NutriVault" without repeating the brand.
   title: {
     default: 'NutriVault - Premium Dry Fruits & Nuts',
