@@ -103,3 +103,28 @@
     @apply bg-green-600;
   }
 }
+
+@layer utilities {
+  .animate-whatsapp-pulse {
+    animation: whatsappPulse 2.4s ease-out infinite;
+  }
+}
+
+/* WhatsApp FAB pulse ring: scale 1→1.35, fade .45→0. Disabled below via
+   prefers-reduced-motion instead of a duplicate keyframe. */
+@keyframes whatsappPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-whatsapp-pulse {
+    animation: none;
+  }
+}

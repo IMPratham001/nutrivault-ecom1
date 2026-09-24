@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { whatsappLink } from '@/lib/whatsapp';
+import { businessMessage } from '@/lib/whatsapp';
+import { WhatsAppLink } from '@/components/layout/WhatsAppLink';
 import {
   CheckCircle,
   Package, 
@@ -152,13 +153,9 @@ export default function OrderConfirmationPage() {
               </Button>
               {/* /help has no page — order questions go straight to a chat. */}
               <Button asChild variant="outline" size="sm">
-                <a
-                  href={whatsappLink('Hi NutriVault, I have a question about my recent order.')}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <WhatsAppLink message={(u) => businessMessage('Ask about my recent order', [], u)}>
                   Chat on WhatsApp
-                </a>
+                </WhatsAppLink>
               </Button>
             </div>
           </div>

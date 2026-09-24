@@ -7,7 +7,8 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { WHATSAPP_URL } from '@/lib/whatsapp';
+import { techurekaEnquiryMessage } from '@/lib/whatsapp';
+import { WhatsAppLink } from '@/components/layout/WhatsAppLink';
 import {
   Leaf,
   Award, 
@@ -293,9 +294,7 @@ export default function AboutPage() {
             </Button>
             {/* "Contact Us" is an enquiry CTA, so it opens the chat directly. */}
             <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-earth">
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-                Contact Us
-              </a>
+              <WhatsAppLink message={techurekaEnquiryMessage}>Contact Us</WhatsAppLink>
             </Button>
           </div>
         </div>

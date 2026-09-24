@@ -1,8 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { NewsletterForm } from '@/components/layout/NewsletterForm';
-import { whatsappLink, WHATSAPP_URL, WHATSAPP_DISPLAY_NUMBER } from '@/lib/whatsapp';
+import { WhatsAppLink } from '@/components/layout/WhatsAppLink';
+import { businessMessage, techurekaEnquiryMessage, WHATSAPP_DISPLAY_NUMBER } from '@/lib/whatsapp';
 import {
   Facebook,
   Instagram,
@@ -126,16 +129,12 @@ export function Footer() {
               <li><Link href="/blog" className="hover:text-white transition-colors">Blog & Recipes</Link></li>
               {/* Wholesale has no page of its own — bulk buyers go straight to a chat. */}
               <li>
-                <a
-                  href={whatsappLink(
-                    "Hi NutriVault, I'd like wholesale pricing for bulk dry fruit orders."
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <WhatsAppLink
+                  message={(u) => businessMessage('Get wholesale pricing for bulk dry fruit orders', [], u)}
                   className="hover:text-white transition-colors"
                 >
                   Wholesale Enquiries
-                </a>
+                </WhatsAppLink>
               </li>
               <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
               <li><Link href="/search" className="hover:text-white transition-colors">Search Products</Link></li>
@@ -153,16 +152,12 @@ export function Footer() {
               <li><Link href="/contact" className="hover:text-white transition-colors">Returns & Exchanges</Link></li>
               <li><Link href="/account" className="hover:text-white transition-colors">Track Your Order</Link></li>
               <li>
-                <a
-                  href={whatsappLink(
-                    "Hi NutriVault, I have a question about my order."
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <WhatsAppLink
+                  message={(u) => businessMessage('Ask a question about my order', [], u)}
                   className="hover:text-white transition-colors"
                 >
                   Chat with Support
-                </a>
+                </WhatsAppLink>
               </li>
               <li><Link href="/about" className="hover:text-white transition-colors">Our Story</Link></li>
             </ul>
@@ -184,14 +179,12 @@ export function Footer() {
                   that actually opens for the visitor. */}
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 flex-shrink-0 text-yellow-400" />
-                <a
-                  href={whatsappLink("Hi NutriVault, I'd like to know more about your products.")}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <WhatsAppLink
+                  message={(u) => businessMessage('Learn more about your products', [], u)}
                   className="hover:text-white transition-colors"
                 >
                   {WHATSAPP_DISPLAY_NUMBER} (WhatsApp)
-                </a>
+                </WhatsAppLink>
               </div>
 
               <div className="flex items-center space-x-3">
@@ -221,14 +214,12 @@ export function Footer() {
               Techureka
             </a>
             {' · '}
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <WhatsAppLink
+              message={techurekaEnquiryMessage}
               className="font-semibold text-yellow-400 hover:text-white transition-colors"
             >
               WhatsApp
-            </a>
+            </WhatsAppLink>
           </p>
           {/* Only routes that actually exist in the export are linked here — the previous
               /privacy, /terms and /cookies links had no pages behind them. */}

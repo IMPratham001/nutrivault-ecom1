@@ -10,7 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { whatsappLink, WHATSAPP_DISPLAY_NUMBER } from '@/lib/whatsapp';
+import { whatsappLink, businessMessage, techurekaEnquiryMessage, WHATSAPP_DISPLAY_NUMBER } from '@/lib/whatsapp';
+import { WhatsAppLink } from '@/components/layout/WhatsAppLink';
 import {
   MapPin,
   Phone, 
@@ -44,6 +45,10 @@ const emptyForm = {
 export default function ContactPage() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  // Why: the fallback "Open WhatsApp" button (shown if the popup was blocked)
+  // needs to reopen the exact same enquiry that was just submitted, not a
+  // generic one — so the submitted, Techureka-signed message is kept around.
+  const [sentMessage, setSentMessage] = useState('');
 
   const setField = (field: keyof typeof emptyForm, value: string) =>
     setForm((current) => ({ ...current, [field]: value }));
@@ -56,19 +61,20 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const lines = [
-      `Hi NutriVault, I'd like to get in touch.`,
-      ``,
+    const details = [
       `Name: ${form.firstName} ${form.lastName}`.trim(),
       `Email: ${form.email}`,
       form.phone ? `Phone: ${form.phone}` : '',
       form.subject ? `Subject: ${subjectLabels[form.subject] ?? form.subject}` : '',
       form.orderNumber ? `Order number: ${form.orderNumber}` : '',
-      ``,
-      form.message,
+      form.message ? `Message: ${form.message}` : '',
     ].filter(Boolean);
 
-    window.open(whatsappLink(lines.join('\n')), '_blank', 'noopener,noreferrer');
+    // Runs at click time (inside the form's submit handler), so reading the
+    // real page URL here is safe — no hydration mismatch risk.
+    const message = businessMessage('Send a message via the contact form', details);
+    setSentMessage(message);
+    window.open(whatsappLink(message), '_blank', 'noopener,noreferrer');
     setFormSubmitted(true);
     setForm(emptyForm);
   };
@@ -90,7 +96,7 @@ export default function ContactPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button asChild className="btn-sage">
-                <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
+                <a href={whatsappLink(sentMessage)} target="_blank" rel="noopener noreferrer">
                   Open WhatsApp
                 </a>
               </Button>
@@ -158,14 +164,12 @@ export default function ContactPage() {
                   <Phone className="h-5 w-5 text-sage mt-1" />
                   <div>
                     <p className="font-medium text-earth">WhatsApp</p>
-                    <a
-                      href={whatsappLink()}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <WhatsAppLink
+                      message={techurekaEnquiryMessage}
                       className="text-gray-600 hover:text-sage transition-colors"
                     >
                       {WHATSAPP_DISPLAY_NUMBER}
-                    </a>
+                    </WhatsAppLink>
                     <p className="text-sm text-gray-500">Mon-Fri 9AM-6PM</p>
                   </div>
                 </div>
@@ -207,29 +211,27 @@ export default function ContactPage() {
                   {
                     title: 'Shipping Information',
                     subtitle: 'Delivery times and costs',
-                    message: 'Hi NutriVault, can you tell me about delivery times and shipping costs?',
+                    action: 'Ask about delivery times and shipping costs',
                   },
                   {
                     title: 'Returns & Exchanges',
                     subtitle: 'Our return policy',
-                    message: 'Hi NutriVault, I have a question about your returns and exchanges policy.',
+                    action: 'Ask about the returns and exchanges policy',
                   },
                   {
                     title: 'Bulk Orders',
                     subtitle: 'Wholesale inquiries',
-                    message: "Hi NutriVault, I'd like wholesale pricing for bulk dry fruit orders.",
+                    action: 'Get wholesale pricing for bulk dry fruit orders',
                   },
                 ].map((topic) => (
-                  <a
+                  <WhatsAppLink
                     key={topic.title}
-                    href={whatsappLink(topic.message)}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    message={(u) => businessMessage(topic.action, [], u)}
                     className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     <p className="font-medium text-earth">{topic.title}</p>
                     <p className="text-sm text-gray-600">{topic.subtitle}</p>
-                  </a>
+                  </WhatsAppLink>
                 ))}
               </CardContent>
             </Card>

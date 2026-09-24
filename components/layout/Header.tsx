@@ -20,7 +20,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useStore } from '@/lib/store';
-import { WHATSAPP_URL } from '@/lib/whatsapp';
+import { techurekaEnquiryMessage } from '@/lib/whatsapp';
+import { WhatsAppLink } from '@/components/layout/WhatsAppLink';
 import {
   Menu,
   Search,
@@ -271,10 +272,10 @@ export function Header() {
                 a prospect is meant to take. Text-free below md so the row still
                 fits at 320px alongside the account and cart icons. */}
             <Button asChild size="sm" className="hidden md:inline-flex btn-sage">
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              <WhatsAppLink message={techurekaEnquiryMessage}>
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Chat with Us
-              </a>
+              </WhatsAppLink>
             </Button>
 
             <Button
@@ -409,10 +410,10 @@ export function Header() {
                   </div>
                   <div className="pt-4">
                     <Button asChild className="w-full btn-sage">
-                      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                      <WhatsAppLink message={techurekaEnquiryMessage} onClick={() => setMobileMenuOpen(false)}>
                         <MessageCircle className="h-4 w-4 mr-2" />
                         Chat with Us
-                      </a>
+                      </WhatsAppLink>
                     </Button>
                   </div>
                 </nav>
