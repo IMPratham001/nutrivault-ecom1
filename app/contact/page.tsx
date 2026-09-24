@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { whatsappLink } from '@/lib/whatsapp';
+import { whatsappLink, WHATSAPP_DISPLAY_NUMBER } from '@/lib/whatsapp';
 import {
   MapPin,
   Phone, 
@@ -164,7 +164,7 @@ export default function ContactPage() {
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-sage transition-colors"
                     >
-                      +91 94298 61654
+                      {WHATSAPP_DISPLAY_NUMBER}
                     </a>
                     <p className="text-sm text-gray-500">Mon-Fri 9AM-6PM</p>
                   </div>

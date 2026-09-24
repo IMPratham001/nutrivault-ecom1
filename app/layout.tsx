@@ -4,6 +4,7 @@ import { Inter, Playfair_Display } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { CartDrawer } from '@/components/ui/cart-drawer';
 import { WhatsAppFab } from '@/components/layout/WhatsAppFab';
+import { TechurekaWatermark } from '@/components/layout/TechurekaWatermark';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
@@ -31,7 +32,8 @@ export const metadata: Metadata = {
     template: '%s | NutriVault',
   },
   description: siteDescription,
-  authors: [{ name: 'NutriVault' }],
+  authors: [{ name: 'NutriVault' }, { name: 'Techureka', url: 'https://techureka.com' }],
+  creator: 'Techureka',
   openGraph: {
     title: 'NutriVault - Premium Dry Fruits & Nuts',
     description: siteDescription,
@@ -58,6 +60,7 @@ export default function RootLayout({
             not just the pages that happened to import them. */}
         <CartDrawer />
         <WhatsAppFab />
+        <TechurekaWatermark />
         <Toaster />
       </body>
     </html>

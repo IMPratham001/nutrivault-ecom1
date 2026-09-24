@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { NewsletterForm } from '@/components/layout/NewsletterForm';
-import { whatsappLink, WHATSAPP_URL } from '@/lib/whatsapp';
+import { whatsappLink, WHATSAPP_URL, WHATSAPP_DISPLAY_NUMBER } from '@/lib/whatsapp';
 import {
   Facebook,
   Instagram,
@@ -190,7 +190,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
-                  +91 94298 61654 (WhatsApp)
+                  {WHATSAPP_DISPLAY_NUMBER} (WhatsApp)
                 </a>
               </div>
 
@@ -213,12 +213,21 @@ export function Footer() {
           <p className="text-yellow-200 text-sm text-center md:text-left">
             © 2025 NutriVault. All rights reserved. · Made by{' '}
             <a
-              href={WHATSAPP_URL}
+              href="https://techureka.com"
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-yellow-400 hover:text-white transition-colors"
             >
               Techureka
+            </a>
+            {' · '}
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-yellow-400 hover:text-white transition-colors"
+            >
+              WhatsApp
             </a>
           </p>
           {/* Only routes that actually exist in the export are linked here — the previous

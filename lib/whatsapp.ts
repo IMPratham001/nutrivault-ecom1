@@ -15,3 +15,9 @@ export function whatsappLink(message: string = DEFAULT_MESSAGE): string {
 }
 
 export const WHATSAPP_URL = whatsappLink();
+
+/** Human-readable form of the same number, for display in contact blocks. */
+export const WHATSAPP_DISPLAY_NUMBER = '+91 94298 61654';
+
+/** `tel:` form, for click-to-call links. */
+export const WHATSAPP_TEL = `tel:+${WHATSAPP_NUMBER}`;
