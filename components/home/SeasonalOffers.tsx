@@ -86,7 +86,7 @@ export function SeasonalOffers() {
             Limited Time Deals
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Don't miss out on these exclusive seasonal offers. Premium quality at unbeatable prices, 
+            Don&apos;t miss out on these exclusive seasonal offers. Premium quality at unbeatable prices,
             but only for a limited time!
           </p>
         </div>

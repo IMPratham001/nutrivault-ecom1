@@ -126,8 +126,8 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Have questions about our products or need assistance? We're here to help! 
-            Reach out to us and we'll respond as quickly as possible.
+            Have questions about our products or need assistance? We&apos;re here to help!
+            Reach out to us and we&apos;ll respond as quickly as possible.
           </p>
         </div>
 

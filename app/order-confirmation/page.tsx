@@ -38,7 +38,7 @@ export default function OrderConfirmationPage() {
           </h1>
           <p className="text-lg text-gray-600 mb-8">
             Thank you for your purchase! Your order has been successfully placed and 
-            you'll receive a confirmation email shortly.
+            you&apos;ll receive a confirmation email shortly.
           </p>
 
           {/* Order Details Card */}

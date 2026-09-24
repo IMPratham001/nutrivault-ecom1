@@ -109,7 +109,7 @@ export default function CartPage() {
             </div>
             <h1 className="text-2xl font-bold text-earth mb-4">Your cart is empty</h1>
             <p className="text-gray-600 mb-8">
-              Looks like you haven't added any items to your cart yet. 
+              Looks like you haven&apos;t added any items to your cart yet.
               Start shopping to fill it up!
             </p>
             <Link href="/products">
@@ -284,7 +284,7 @@ export default function CartPage() {
                 </div>
                 {appliedCoupon && (
                   <div className="mt-2 flex items-center justify-between text-sm">
-                    <span className="text-green-600">Coupon "{appliedCoupon}" applied</span>
+                    <span className="text-green-600">Coupon &quot;{appliedCoupon}&quot; applied</span>
                     <Button
                       variant="ghost"
                       size="sm"

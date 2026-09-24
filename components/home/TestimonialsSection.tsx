@@ -97,7 +97,7 @@ export function TestimonialsSection() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5 }}
                     >
-                      "{testimonials[currentTestimonial].comment}"
+                      &quot;{testimonials[currentTestimonial].comment}&quot;
                     </motion.blockquote>
 
                     {/* Customer Info */}

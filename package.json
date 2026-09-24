@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "author": "Techureka <https://techureka.com>",
+  "engines": {
+    "node": ">=22.4.0"
+  },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node --no-experimental-webstorage node_modules/next/dist/bin/next build",
     "start": "next start",
     "lint": "next lint"
   },

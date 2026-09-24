@@ -90,12 +90,12 @@ export default function AboutPage() {
           <div>
             <Badge className="bg-sage/10 text-sage mb-4">Our Story</Badge>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-playfair text-earth mb-6">
-              Bringing Nature's Best to Your Table
+              Bringing Nature&apos;s Best to Your Table
             </h1>
             <p className="text-lg text-gray-600 mb-6">
-              Founded in 2010, NutriVault began as a small family business with a simple mission: 
-              to provide the world's finest dry fruits and nuts directly to health-conscious consumers. 
-              Today, we're proud to be a trusted global brand serving customers in over 30 countries.
+              Founded in 2010, NutriVault began as a small family business with a simple mission:
+              to provide the world&apos;s finest dry fruits and nuts directly to health-conscious consumers.
+              Today, we&apos;re proud to be a trusted global brand serving customers in over 30 countries.
             </p>
             <p className="text-gray-600 mb-8">
               Our commitment to quality, sustainability, and customer satisfaction has made us 
@@ -204,7 +204,7 @@ export default function AboutPage() {
                 Our Vision
               </h3>
               <p className="text-gray-700">
-                To become the world's most trusted brand for premium dry fruits and nuts, 
+                To become the world&apos;s most trusted brand for premium dry fruits and nuts,
                 known for our unwavering commitment to quality, sustainability, and 
                 customer satisfaction.
               </p>

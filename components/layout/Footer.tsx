@@ -99,7 +99,7 @@ export function Footer() {
             </div>
             <p className="text-yellow-200 mb-4">
               Your trusted source for premium dry fruits and nuts from around the world. 
-              We're committed to providing the highest quality, naturally sourced products.
+              We&apos;re committed to providing the highest quality, naturally sourced products.
             </p>
             <div className="flex space-x-4">
               <Button variant="ghost" size="icon" aria-label="NutriVault on Facebook" className="text-yellow-400 hover:text-white hover:bg-white/10">
